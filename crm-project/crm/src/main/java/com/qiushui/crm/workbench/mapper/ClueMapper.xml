@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.ClueMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.Clue">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="fullname" jdbcType="VARCHAR" property="fullname" />
+    <result column="appellation" jdbcType="VARCHAR" property="appellation" />
+    <result column="owner" jdbcType="CHAR" property="owner" />
+    <result column="company" jdbcType="VARCHAR" property="company" />
+    <result column="job" jdbcType="VARCHAR" property="job" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="website" jdbcType="VARCHAR" property="website" />
+    <result column="mphone" jdbcType="VARCHAR" property="mphone" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="edit_by" jdbcType="VARCHAR" property="editBy" />
+    <result column="edit_time" jdbcType="CHAR" property="editTime" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="contact_summary" jdbcType="VARCHAR" property="contactSummary" />
+    <result column="next_contact_time" jdbcType="CHAR" property="nextContactTime" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+
+  <delete id="deleteDataByClueId" parameterType="java.lang.String">
+    delete from tbl_clue
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insertClue" parameterType="com.qiushui.crm.workbench.pojo.Clue">
+    insert into tbl_clue (id, fullname, appellation,
+      owner, company, job, email,
+      phone, website, mphone,
+      state, source, create_by,
+      create_time,
+      description, contact_summary, next_contact_time,
+      address)
+    values (#{id,jdbcType=CHAR}, #{fullname,jdbcType=VARCHAR}, #{appellation,jdbcType=VARCHAR},
+      #{owner,jdbcType=CHAR}, #{company,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR}, #{mphone,jdbcType=VARCHAR},
+      #{state,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},
+      #{createTime,jdbcType=CHAR},
+      #{description,jdbcType=VARCHAR}, #{contactSummary,jdbcType=VARCHAR}, #{nextContactTime,jdbcType=CHAR},
+      #{address,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.Clue">
+    update tbl_clue
+    set fullname = #{fullname,jdbcType=VARCHAR},
+      appellation = #{appellation,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=CHAR},
+      company = #{company,jdbcType=VARCHAR},
+      job = #{job,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      website = #{website,jdbcType=VARCHAR},
+      mphone = #{mphone,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      edit_by = #{editBy,jdbcType=VARCHAR},
+      edit_time = #{editTime,jdbcType=CHAR},
+      description = #{description,jdbcType=VARCHAR},
+      contact_summary = #{contactSummary,jdbcType=VARCHAR},
+      next_contact_time = #{nextContactTime,jdbcType=CHAR},
+      address = #{address,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectClueByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select c.id, c.fullname, dt2.value as appellation, u3.name as owner, c.company, c.job, c.email, c.phone, c.website, c.mphone,
+    dt.value as state, dt1.value as source, u1.name as create_by, c.create_time, u2.name as edit_by, c.edit_time, c.description, c.contact_summary,
+    c.next_contact_time, c.address
+    from tbl_clue c
+    join tbl_user u1 on u1.id=c.create_by
+    left join tbl_user u2 on u2.id=c.edit_by
+    join tbl_user u3 on u3.id=c.owner
+    join tbl_dic_value dt on dt.id=c.state
+    join tbl_dic_value dt1 on dt1.id=c.source
+    join tbl_dic_value dt2 on dt2.id=c.appellation
+    where c.id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, fullname, appellation, owner, company, job, email, phone, website, mphone,
+    state, source, create_by, create_time, edit_by, edit_time, description, contact_summary,
+    next_contact_time, address
+    from tbl_clue
+  </select>
+
+  <select id="selectClueOfOriginDetailByPrimaryKey" parameterType="string" resultMap="BaseResultMap">
+    select id,fullname,appellation,owner,company,job,email,phone,website,mphone,state,source,create_by,
+      create_time,edit_by,edit_time,description,contact_summary,next_contact_time,address
+    from tbl_clue
+    where id=#{id,jdbcType=CHAR}
+  </select>
+</mapper>

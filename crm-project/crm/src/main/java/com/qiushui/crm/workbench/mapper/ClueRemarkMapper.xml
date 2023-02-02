@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.ClueRemarkMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.ClueRemark">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="note_content" jdbcType="VARCHAR" property="noteContent" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="edit_by" jdbcType="VARCHAR" property="editBy" />
+    <result column="edit_time" jdbcType="CHAR" property="editTime" />
+    <result column="edit_flag" jdbcType="CHAR" property="editFlag" />
+    <result column="clue_id" jdbcType="CHAR" property="clueId" />
+  </resultMap>
+
+  <delete id="deleteDataByClueId" parameterType="java.lang.String">
+    delete from tbl_clue_remark
+    where clue_id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.qiushui.crm.workbench.pojo.ClueRemark">
+    insert into tbl_clue_remark (id, note_content, create_by,
+      create_time, edit_by, edit_time,
+      edit_flag, clue_id)
+    values (#{id,jdbcType=CHAR}, #{noteContent,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},
+      #{createTime,jdbcType=CHAR}, #{editBy,jdbcType=VARCHAR}, #{editTime,jdbcType=CHAR},
+      #{editFlag,jdbcType=CHAR}, #{clueId,jdbcType=CHAR})
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.ClueRemark">
+    update tbl_clue_remark
+    set note_content = #{noteContent,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      edit_by = #{editBy,jdbcType=VARCHAR},
+      edit_time = #{editTime,jdbcType=CHAR},
+      edit_flag = #{editFlag,jdbcType=CHAR},
+      clue_id = #{clueId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, clue_id
+    from tbl_clue_remark
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectClueForOriginByClueId" resultMap="BaseResultMap" parameterType="string">
+    select id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, clue_id
+    from tbl_clue_remark
+    where clue_id=#{id}
+  </select>
+
+  <select id="selectClueRemarkByClueId" resultMap="BaseResultMap">
+    select cr.id, cr.note_content, u.name as create_by, cr.create_time, cr.edit_by, cr.edit_time, cr.edit_flag, cr.clue_id
+    from tbl_clue_remark cr
+    join tbl_user u on u.id=cr.create_by
+    where cr.clue_id=#{id}
+  </select>
+</mapper>

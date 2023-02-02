@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--
+        targetRuntime有两个值：
+            MyBatis3Simple：生成的是基础版，只有基本的增删改查。
+            MyBatis3：生成的是增强版，除了基本的增删改查之外还有复杂的增删改查。
+    -->
+    <context id="DB2Tables" targetRuntime="MyBatis3Simple">
+        <!--防止生成重复代码-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+
+        <commentGenerator>
+            <!--是否去掉生成日期-->
+            <property name="suppressDate" value="true"/>
+            <!--是否去除注释-->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <!--连接数据库信息-->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/crm"
+                        userId="root"
+                        password="333">
+        </jdbcConnection>
+
+        <!-- 生成pojo包名和位置 -->
+        <javaModelGenerator targetPackage="com.qiushui.crm.workbench.pojo" targetProject="F:/springcode/crm-project/crm/src/main/java">
+            <!--是否开启子包-->
+            <property name="enableSubPackages" value="true"/>
+            <!--是否去除字段名的前后空白-->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- 生成SQL映射文件的包名和位置 -->
+        <sqlMapGenerator targetPackage="com.qiushui.crm.workbench.mapper" targetProject="F:/springcode/crm-project/crm/src/main/java">
+            <!--是否开启子包-->
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- 生成Mapper接口的包名和位置 -->
+        <javaClientGenerator
+                type="xmlMapper"
+                targetPackage="com.qiushui.crm.workbench.mapper"
+                targetProject="F:/springcode/crm-project/crm/src/main/java">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- 表名和对应的实体类名-->
+        <!--<table tableName="tbl_user" domainObjectName="User"/>-->
+        <!--<table tableName="tbl_activity" domainObjectName="Activity"/>-->
+        <!--<table tableName="tbl_activity_remark" domainObjectName="ActivityRemark"/>-->
+        <!--<table tableName="tbl_dic_value" domainObjectName="DicValue"/>-->
+        <!--<table tableName="tbl_clue" domainObjectName="Clue"/>-->
+        <!--<table tableName="tbl_clue_remark" domainObjectName="ClueRemark"/>-->
+        <!--<table tableName="tbl_clue_activity_relation" domainObjectName="ClueActivityRelation"/>-->
+        <!--<table tableName="tbl_customer" domainObjectName="Customer"/>-->
+        <!--<table tableName="tbl_contacts" domainObjectName="Contacts"/>-->
+        <!--<table tableName="tbl_contacts_remark" domainObjectName="ContactsRemark"/>-->
+        <!--<table tableName="tbl_contacts_activity_relation" domainObjectName="ContactsActivityRelation"/>-->
+        <!--<table tableName="tbl_customer_remark" domainObjectName="CustomerRemark"/>-->
+        <!--<table tableName="tbl_tran" domainObjectName="Transaction"/>-->
+        <!--<table tableName="tbl_tran_remark" domainObjectName="TransactionRemark"/>-->
+        <table tableName="tbl_tran_history" domainObjectName="TransactionHistory"/>
+
+
+    </context>
+</generatorConfiguration>

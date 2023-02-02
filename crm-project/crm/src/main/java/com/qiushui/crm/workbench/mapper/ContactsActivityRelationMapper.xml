@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.ContactsActivityRelationMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.ContactsActivityRelation">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="contacts_id" jdbcType="CHAR" property="contactsId" />
+    <result column="activity_id" jdbcType="CHAR" property="activityId" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbl_contacts_activity_relation
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insertOriginData" parameterType="com.qiushui.crm.workbench.pojo.ContactsActivityRelation">
+    insert into tbl_contacts_activity_relation (id, contacts_id, activity_id)
+    values
+        <foreach collection="list" item="obj" separator=",">
+          (#{obj.id,jdbcType=CHAR}, #{obj.contactsId,jdbcType=CHAR}, #{obj.activityId,jdbcType=CHAR})
+        </foreach>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.ContactsActivityRelation">
+    update tbl_contacts_activity_relation
+    set contacts_id = #{contactsId,jdbcType=CHAR},
+      activity_id = #{activityId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, contacts_id, activity_id
+    from tbl_contacts_activity_relation
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, contacts_id, activity_id
+    from tbl_contacts_activity_relation
+  </select>
+</mapper>

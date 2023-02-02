@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.settings.mapper.DicValueMapper">
+
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.settings.pojo.DicValue">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="text" jdbcType="VARCHAR" property="text" />
+    <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbl_dic_value
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.qiushui.crm.settings.pojo.DicValue">
+    insert into tbl_dic_value (id, value, text,
+      order_no, type_code)
+    values (#{id,jdbcType=CHAR}, #{value,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR},
+      #{orderNo,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.settings.pojo.DicValue">
+    update tbl_dic_value
+    set value = #{value,jdbcType=VARCHAR},
+      text = #{text,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      type_code = #{typeCode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, value, text, order_no, type_code
+    from tbl_dic_value
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <select id="selectDicValueGroupByDicType" resultMap="BaseResultMap">
+    select id, value, text,order_no
+    from tbl_dic_value
+    where type_code=#{dicTypeCode}
+    order by order_no asc
+  </select>
+</mapper>

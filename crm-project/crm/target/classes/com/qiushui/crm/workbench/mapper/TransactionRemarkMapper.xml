@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.TransactionRemarkMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.TransactionRemark">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="note_content" jdbcType="VARCHAR" property="noteContent" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="edit_by" jdbcType="VARCHAR" property="editBy" />
+    <result column="edit_time" jdbcType="CHAR" property="editTime" />
+    <result column="edit_flag" jdbcType="CHAR" property="editFlag" />
+    <result column="tran_id" jdbcType="CHAR" property="tranId" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbl_tran_remark
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insertOriginData" parameterType="com.qiushui.crm.workbench.pojo.TransactionRemark">
+    insert into tbl_tran_remark (id, note_content, create_by,
+      create_time, edit_by, edit_time,
+      edit_flag, tran_id)
+    values
+    <foreach collection="list" item="obj" separator=",">
+      (#{obj.id,jdbcType=CHAR}, #{obj.noteContent,jdbcType=VARCHAR}, #{obj.createBy,jdbcType=VARCHAR},
+      #{obj.createTime,jdbcType=CHAR}, #{obj.editBy,jdbcType=VARCHAR}, #{obj.editTime,jdbcType=CHAR},
+      #{obj.editFlag,jdbcType=CHAR}, #{obj.tranId,jdbcType=CHAR})
+    </foreach>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.TransactionRemark">
+    update tbl_tran_remark
+    set note_content = #{noteContent,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      edit_by = #{editBy,jdbcType=VARCHAR},
+      edit_time = #{editTime,jdbcType=CHAR},
+      edit_flag = #{editFlag,jdbcType=CHAR},
+      tran_id = #{tranId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, tran_id
+    from tbl_tran_remark
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, tran_id
+    from tbl_tran_remark
+  </select>
+
+    <select id="selectModifyDataByTranId" resultMap="BaseResultMap">
+        select tr.id, tr.note_content, u2.name as create_by,tr.create_time,u3.name as edit_by,
+               tr.edit_time, tr.edit_flag
+        from tbl_tran_remark tr
+        join tbl_user u2 on u2.id=tr.create_by
+        left join tbl_user u3 on u3.id=tr.edit_by
+        where tr.tran_id=#{id}
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.ContactsRemarkMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.ContactsRemark">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="note_content" jdbcType="VARCHAR" property="noteContent" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="edit_by" jdbcType="VARCHAR" property="editBy" />
+    <result column="edit_time" jdbcType="CHAR" property="editTime" />
+    <result column="edit_flag" jdbcType="CHAR" property="editFlag" />
+    <result column="contacts_id" jdbcType="CHAR" property="contactsId" />
+  </resultMap>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbl_contacts_remark
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insertOriginData" parameterType="com.qiushui.crm.workbench.pojo.ContactsRemark">
+    insert into tbl_contacts_remark (id, note_content, create_by,
+      create_time, edit_by, edit_time,
+      edit_flag, contacts_id)
+    values
+        <foreach collection="list" item="obj" separator=",">
+          (#{obj.id,jdbcType=CHAR}, #{obj.noteContent,jdbcType=VARCHAR}, #{obj.createBy,jdbcType=VARCHAR},
+          #{obj.createTime,jdbcType=CHAR}, #{obj.editBy,jdbcType=VARCHAR}, #{obj.editTime,jdbcType=CHAR},
+          #{obj.editFlag,jdbcType=CHAR}, #{obj.contactsId,jdbcType=CHAR})
+        </foreach>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.ContactsRemark">
+    update tbl_contacts_remark
+    set note_content = #{noteContent,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      edit_by = #{editBy,jdbcType=VARCHAR},
+      edit_time = #{editTime,jdbcType=CHAR},
+      edit_flag = #{editFlag,jdbcType=CHAR},
+      contacts_id = #{contactsId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, contacts_id
+    from tbl_contacts_remark
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, note_content, create_by, create_time, edit_by, edit_time, edit_flag, contacts_id
+    from tbl_contacts_remark
+  </select>
+</mapper>

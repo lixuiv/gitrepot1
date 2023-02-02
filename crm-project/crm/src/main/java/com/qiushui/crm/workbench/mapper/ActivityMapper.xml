@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.ActivityMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.Activity">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="owner" jdbcType="CHAR" property="owner" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="start_date" jdbcType="CHAR" property="startDate" />
+    <result column="end_date" jdbcType="CHAR" property="endDate" />
+    <result column="cost" jdbcType="VARCHAR" property="cost" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="edit_time" jdbcType="CHAR" property="editTime" />
+    <result column="edit_by" jdbcType="VARCHAR" property="editBy" />
+  </resultMap>
+
+  <delete id="deleteActivityRemarkByIds">
+    delete from tbl_activity where id in
+    <foreach collection="array" item="id" separator="," open="(" close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+  <insert id="insertActivity" parameterType="com.qiushui.crm.workbench.pojo.Activity">
+    insert into tbl_activity (id, owner, name, start_date,
+      end_date, cost, description,
+      create_time, create_by)
+    values (#{id,jdbcType=CHAR}, #{owner,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{startDate,jdbcType=CHAR},
+      #{endDate,jdbcType=CHAR}, #{cost,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+      #{createTime,jdbcType=CHAR}, #{createBy,jdbcType=VARCHAR} )
+  </insert>
+
+  <insert id="insertActivityByFile">
+    insert into tbl_activity
+    (id, owner, name, start_date,end_date, cost, description, create_time, create_by)
+    values
+    <foreach collection="list" item="obj" separator=",">
+      (#{obj.id}, #{obj.owner}, #{obj.name}, #{obj.startDate},#{obj.endDate}, #{obj.cost}, #{obj.description},
+      #{obj.createTime}, #{obj.createBy} )
+    </foreach>
+  </insert>
+
+  <update id="updateActivityRemark" parameterType="com.qiushui.crm.workbench.pojo.Activity">
+    update tbl_activity
+    set owner = #{owner,jdbcType=CHAR},
+      name = #{name,jdbcType=VARCHAR},
+      start_date = #{startDate,jdbcType=CHAR},
+      end_date = #{endDate,jdbcType=CHAR},
+      cost = #{cost,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      edit_time = #{editTime,jdbcType=CHAR},
+      edit_by = #{editBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectActivityById" parameterType="java.lang.String" resultMap="BaseResultMap">
+<![CDATA[select id, owner, name, start_date, end_date, cost, description
+         from tbl_activity
+         where id = #{id,jdbcType=CHAR}]]>
+  </select>
+
+  <select id="selectActivityByConditionForPage" resultMap="BaseResultMap">
+    select act.id,act.name,us.name as owner,act.start_date, act.end_date
+    from tbl_activity act
+    join tbl_user us on act.owner=us.id
+    <where>
+      <if test="name!=null and name!=''">
+        and act.name like "%"#{name}"%"
+      </if>
+      <if test="owner!=null and owner!=''">
+        and us.name like "%"#{owner}"%"
+      </if>
+      <if test="start_date!=null and start_date!=''">
+        and act.start_date >= #{start_date}
+      </if>
+      <if test="end_date!=null and end_date!=''">
+        and act.end_date &lt;=#{end_date}
+      </if>
+    </where>
+    order by act.start_date desc
+    limit #{beginIndex},#{pageSize}
+  </select>
+
+  <select id="selectCountOfActivityForPage" resultType="int">
+    select count(*)
+    from tbl_activity act
+    join tbl_user us on us.id=act.owner
+    <where>
+      <if test="name!=null and name!=''">
+        and act.name like "%"#{name}"%"
+      </if>
+      <if test="owner!=null and owner!=''">
+        and us.name like "%"#{owner}"%"
+      </if>
+      <if test="start_date!=null and start_date!=''">
+        and act.start_date >= #{start_date}
+      </if>
+      <if test="end_date!=null and end_date!=''">
+        and act.end_date &lt;=#{end_date}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectActivityForExport" resultMap="BaseResultMap">
+    select acty.id,us.name as owner, acty.name, acty.start_date, acty.end_date, acty.cost, acty.description
+         ,acty.create_time,us1.name as create_by,acty.edit_time,us2.name as edit_by
+    from tbl_activity acty
+    join tbl_user us on acty.owner = us.id
+    join tbl_user us1 on acty.create_by = us1.id
+    left join tbl_user us2 on acty.edit_by = us2.id
+    <if test="array!=null and array!=''">
+        <where>
+          acty.id in
+          <foreach collection="array" item="id" separator="," open="(" close=")">
+            #{id}
+          </foreach>
+        </where>
+    </if>
+  </select>
+  <select id="selectActivityByClueId" resultMap="BaseResultMap">
+    select acty.id,us.name as owner, acty.name, acty.start_date, acty.end_date, acty.cost, acty.description
+         ,acty.create_time,us1.name as create_by,acty.edit_time,us2.name as edit_by
+    from tbl_activity acty
+    join tbl_user us on acty.owner = us.id
+    join tbl_user us1 on acty.create_by = us1.id
+    left join tbl_user us2 on acty.edit_by = us2.id
+    join tbl_clue_activity_relation car on acty.id=car.activity_id
+    where car.clue_id=#{id}
+  </select>
+
+  <select id="selectActivityForFuzzy" resultMap="BaseResultMap">
+    select acty.id,us.name as owner,acty.name,acty.start_date,acty.end_date
+    from tbl_activity acty
+    join tbl_user us on acty.owner = us.id
+    where acty.name like "%"#{value}"%" and acty.id not in(
+        select activity_id from tbl_clue_activity_relation
+        where clue_id=#{clueId}
+      )
+  </select>
+
+  <select id="selectActivityFuzzyForConvert" resultMap="BaseResultMap">
+    select acty.id,us.name as owner,acty.name,acty.start_date,acty.end_date
+    from tbl_activity acty
+           join tbl_user us on acty.owner = us.id
+    where acty.name like "%"#{value}"%" and acty.id  in(
+        select activity_id from tbl_clue_activity_relation
+        where clue_id=#{clueId}
+      )
+  </select>
+
+  <select id="selectModifyActivityFuzzyForSave" resultMap="BaseResultMap" parameterType="string">
+      select acty.id,us.name as owner,acty.name,acty.start_date,acty.end_date
+      from tbl_activity acty
+      join tbl_user us on acty.owner = us.id
+      where acty.name like "%"#{value}"%"
+  </select>
+</mapper>

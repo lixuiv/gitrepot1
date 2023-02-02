@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.ClueActivityRelationMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.ClueActivityRelation">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="clue_id" jdbcType="CHAR" property="clueId" />
+    <result column="activity_id" jdbcType="CHAR" property="activityId" />
+  </resultMap>
+
+  <delete id="deleteByClueAndActivityId" parameterType="java.lang.String">
+    delete from tbl_clue_activity_relation
+    where activity_id=#{activityId} and clue_id=#{clueId}
+  </delete>
+
+  <insert id="insertClueActivityRelationByIds" parameterType="com.qiushui.crm.workbench.pojo.ClueActivityRelation">
+    insert into tbl_clue_activity_relation (id, clue_id, activity_id)
+    values
+    <foreach collection="list" item="ids" separator=",">
+      (#{ids.id,jdbcType=CHAR}, #{ids.clueId,jdbcType=CHAR}, #{ids.activityId,jdbcType=CHAR})
+    </foreach>
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.ClueActivityRelation">
+    update tbl_clue_activity_relation
+    set clue_id = #{clueId,jdbcType=CHAR},
+      activity_id = #{activityId,jdbcType=CHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, clue_id, activity_id
+    from tbl_clue_activity_relation
+    where id = #{id,jdbcType=CHAR}
+  </select>
+
+  <select id="selectOriginByClueId" resultMap="BaseResultMap">
+    select id, clue_id, activity_id
+    from tbl_clue_activity_relation
+    where clue_id=#{id}
+  </select>
+
+  <delete id="deleteRelationByClueId" parameterType="string">
+    delete from tbl_clue_activity_relation
+    where clue_id=#{clueId}
+  </delete>
+</mapper>

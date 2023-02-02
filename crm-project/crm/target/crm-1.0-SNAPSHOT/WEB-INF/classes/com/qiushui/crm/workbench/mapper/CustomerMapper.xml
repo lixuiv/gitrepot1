@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qiushui.crm.workbench.mapper.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.qiushui.crm.workbench.pojo.Customer">
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="owner" jdbcType="CHAR" property="owner" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="website" jdbcType="VARCHAR" property="website" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="CHAR" property="createTime" />
+    <result column="edit_by" jdbcType="VARCHAR" property="editBy" />
+    <result column="edit_time" jdbcType="CHAR" property="editTime" />
+    <result column="contact_summary" jdbcType="VARCHAR" property="contactSummary" />
+    <result column="next_contact_time" jdbcType="CHAR" property="nextContactTime" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbl_customer
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+
+  <insert id="insertCustomerForOrigin" parameterType="com.qiushui.crm.workbench.pojo.Customer">
+    insert into tbl_customer (id, owner, name, website,
+      phone, create_by, create_time,contact_summary,
+      next_contact_time, description, address
+      )
+    values (#{id,jdbcType=CHAR}, #{owner,jdbcType=CHAR}, #{name,jdbcType=VARCHAR}, #{website,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=CHAR},#{contactSummary,jdbcType=VARCHAR},
+      #{nextContactTime,jdbcType=CHAR}, #{description,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <update id="updateByPrimaryKey" parameterType="com.qiushui.crm.workbench.pojo.Customer">
+    update tbl_customer
+    set owner = #{owner,jdbcType=CHAR},
+      name = #{name,jdbcType=VARCHAR},
+      website = #{website,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=CHAR},
+      edit_by = #{editBy,jdbcType=VARCHAR},
+      edit_time = #{editTime,jdbcType=CHAR},
+      contact_summary = #{contactSummary,jdbcType=VARCHAR},
+      next_contact_time = #{nextContactTime,jdbcType=CHAR},
+      description = #{description,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+
+  <select id="selectOriginByAccurateName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, owner, name, website, phone, create_by, create_time, edit_by, edit_time,
+    contact_summary, next_contact_time, description, address
+    from tbl_customer
+    where name = #{name}
+  </select>
+
+
+  <select id="selectModifyNameByFuzzyName" resultType="string">
+    select name
+    from tbl_customer
+    where name like "%"#{name}"%"
+  </select>
+</mapper>

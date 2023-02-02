@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--第一部分：开启注解配置 -->
+    <mvc:annotation-driven></mvc:annotation-driven>
+    <mvc:default-servlet-handler></mvc:default-servlet-handler>
+    <!--第二部分：组件扫描 -->
+    <context:component-scan base-package="com.qiushui.crm.web.controller"></context:component-scan>
+    <context:component-scan base-package="com.qiushui.crm.settings.web.controller"></context:component-scan>
+    <context:component-scan base-package="com.qiushui.crm.workbench.web.controller"></context:component-scan>
+    <!--第三部分：视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/pages/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+    <!--第四部分：拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/settings/**"/>
+            <mvc:mapping path="/workbench/**"/>
+            <mvc:exclude-mapping path="/"/>
+            <mvc:exclude-mapping path="/settings/qx/user/toLogin"/>
+            <mvc:exclude-mapping path="/settings/qx/user/Login"/>
+            <bean class="com.qiushui.crm.web.interceptor.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!--第四部分：文件上传解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxInMemorySize" value="#{1024*1024*8}"></property>
+        <property name="defaultEncoding" value="utf-8"></property>
+    </bean>
+</beans>
